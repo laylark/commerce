@@ -3,9 +3,11 @@
 {% block body %}
     <h2>Active Listings</h2>
     <ul>
-        {% for category in categories %}
-        <li>{{ category.name }}</li>
+        {% for listing in listings %}
+        <li>{{ listing.title }}</li>
+        <li>{{ listing.description }}</li>
+        <img src="{{ listing.img_path }}">
+        <li>Price: ${{ listing.price }}</li>
         {% endfor %}
     </ul>
-    TODO
 {% endblock %}
