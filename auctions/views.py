@@ -49,14 +49,20 @@ def create_listing(request):
 
 # Render listings active in watchlist
 def watchlist(request):
+
+    # Validate if user is logged in
+    if not request.user.is_authenticated:
+        return redirect("index")
+
     return render(request, "auctions/watchlist.html", {
-        "watchlist": Watchlist.objects.all()
+        "watchlist": request.user.watched_listings.all()
     })
 
 # Render page for selected listing
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
     
+    # Validate if entry exists
     if listing == None:
         return render(request, "auctions/404.html", status=404)
 
