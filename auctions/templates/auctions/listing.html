@@ -3,6 +3,12 @@
 {% block body %}
     <h2>{{ listing.title }}</h2>
     <ul>
+        {% if user.is_authenticated %}
+        <form action="{% url 'listing' id=listing.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
+        </form>
+        {% endif %}
         <li>{{ listing.description }}</li>
         <img src="{{ listing.img_path }}">
         <li>Price: ${{ listing.price }}</li>

@@ -49,7 +49,6 @@ def create_listing(request):
 
 # Render listings active in watchlist
 def watchlist(request):
-
     # Validate if user is logged in
     if not request.user.is_authenticated:
         return redirect("index")
@@ -61,14 +60,24 @@ def watchlist(request):
 # Render page for selected listing
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
-    
+
     # Validate if entry exists
     if listing == None:
         return render(request, "auctions/404.html", status=404)
 
+    if request.method == "POST":
+
+        # Add listing to watchlist if does not exist and redirect to watchlist page
+        if listing.watched_listings.filter(id=request.user.id).exists():
+            listing.watched_listings.remove(request.user)
+        else:
+            listing.watched_listings.add(request.user)
+        return redirect("watchlist")
+
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
+    
 
 def login_view(request):
     if request.method == "POST":
