@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
 
-
 class User(AbstractUser):
     pass
 
@@ -40,3 +39,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.text}, {self.listing}, {self.user}, {self.created_at}"
+
+class Watchlist(models.Model):
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchlist")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+
+    def __str__(self):
+        return f"{self.listing}, {self.user}"

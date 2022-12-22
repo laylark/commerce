@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 
-from .models import User, Category, Listing, Bid, Comment
+from .models import User, Category, Listing, Bid, Comment, Watchlist
 
 # Create class for new listing form
 class NewListingForm(forms.Form):
@@ -46,6 +46,24 @@ def create_listing(request):
     # Render new listing form page
     return render(request, "auctions/create.html", {"form": NewListingForm()})
         
+
+# Render listings active in watchlist
+def watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": Watchlist.objects.all()
+    })
+
+# Render page for selected listing
+def listing(request, id):
+    listing = Listing.objects.get(pk=id)
+    
+    if listing == None:
+        return render(request, "auctions/404.html", status=404)
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })
+
 def login_view(request):
     if request.method == "POST":
 

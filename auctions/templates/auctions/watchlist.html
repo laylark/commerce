@@ -1,10 +1,10 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Watchlist</h2>
     <ul>
-        {% for listing in listings %}
-        <a href="{% url 'listing' id=listing.id %}">{{ listing.title }}</a>
+        {% for listing in watchlist %}
+        <li>{{ listing.title }}</li>
         <li>{{ listing.description }}</li>
         <img src="{{ listing.img_path }}">
         <li>Price: ${{ listing.price }}</li>
