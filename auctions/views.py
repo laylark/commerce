@@ -1,11 +1,12 @@
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django import forms
 
-from .models import User, Category, Listing, Bid, Comment, Watchlist
+from .models import User, Category, Listing, Bid, Comment
 
 # Create class for new listing form
 class NewListingForm(forms.Form):
@@ -14,6 +15,10 @@ class NewListingForm(forms.Form):
     image = forms.CharField(label="Image path", widget=forms.TextInput(attrs={'class' : 'form-control'}))
     price = forms.DecimalField(label="Price", widget=forms.TextInput(attrs={'class' : 'form-control'}))
     category = forms.ModelChoiceField(queryset=Category.objects.all().order_by('name'))
+
+# Create class for bidding form
+class NewBidForm(forms.Form):
+    amount = forms.DecimalField(label="Bid", widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
 # Render index page with all listings
 def index(request):
@@ -68,16 +73,45 @@ def listing(request, id):
     if request.method == "POST":
 
         # Add listing to watchlist if does not exist and redirect to watchlist page
-        if listing.watched_listings.filter(id=request.user.id).exists():
-            listing.watched_listings.remove(request.user)
+        if listing.watched_by.filter(id=request.user.id).exists():
+            listing.watched_by.remove(request.user)
         else:
-            listing.watched_listings.add(request.user)
+            listing.watched_by.add(request.user)
         return redirect("watchlist")
 
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listing,
+        "bid_form": NewBidForm(),
     })
     
+# Post valid bids to database
+def bid(request, id):
+    listing = Listing.objects.get(pk=id)
+    max_amount = listing.bids.aggregate(Max("amount"))["amount__max"] or 0 # Creates dict for max amount
+
+    # Create a new bid form
+    form = NewBidForm(request.POST)
+
+    # Validate form
+    if not form.is_valid():
+    # If not valid, render listing page along with form data submitted by user
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "bid_form": form,
+        })
+
+    amount = form.cleaned_data["amount"]
+
+    # Save bid to table and redirect to index page if bid > max amount
+    if max_amount > amount:
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "bid_form": form,
+        })
+
+    bid = Bid(amount=amount, listing=listing, user=request.user)
+    bid.save()
+    return redirect("listing", id=id)
 
 def login_view(request):
     if request.method == "POST":
