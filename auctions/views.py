@@ -19,7 +19,7 @@ class NewListingForm(forms.Form):
 
 # Create class for bidding form
 class NewBidForm(forms.Form):
-    amount = forms.DecimalField(label="Bid", widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    amount = forms.DecimalField(label="Bid", widget=forms.TextInput(attrs={'class' : 'form-control mx-2'}))
 
 # Render index page with all listings
 def index(request):

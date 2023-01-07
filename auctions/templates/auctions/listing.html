@@ -17,12 +17,12 @@
         {% csrf_token %}
         <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
         </form>
-        <form action="{% url 'bid' id=listing.id %}" method="post">
-            <div class="form-group wrapper">
+        <form action="{% url 'bid' id=listing.id %}" method="post" class="row">
+            <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
             {% csrf_token %}
             {{ bid_form }}
-            </div>
             <input type="submit" value="Bid" class="btn btn-primary btns">
+            </div>
         </form>
         {% endif %}
         <li>{{ listing.description }}</li>
