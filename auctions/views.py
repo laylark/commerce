@@ -65,6 +65,8 @@ def watchlist(request):
 # Render page for selected listing
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
+    max_bid = listing.bids.order_by('-amount').first() # SELECT * FROM bids WHERE listing = id ORDER BY amount desc LIMIT 1
+
 
     # Validate if entry exists
     if listing == None:
@@ -82,12 +84,13 @@ def listing(request, id):
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "bid_form": NewBidForm(),
+        "max_bid": max_bid,
     })
     
 # Post valid bids to database
 def bid(request, id):
     listing = Listing.objects.get(pk=id)
-    max_amount = listing.bids.aggregate(Max("amount"))["amount__max"] or 0 # Creates dict for max amount
+    max_bid = listing.bids.order_by('-amount').first()
 
     # Create a new bid form
     form = NewBidForm(request.POST)
@@ -98,15 +101,17 @@ def bid(request, id):
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "bid_form": form,
+            "max_bid": max_bid,
         })
 
     amount = form.cleaned_data["amount"]
 
     # Save bid to table and redirect to index page if bid > max amount
-    if max_amount > amount:
+    if max_bid.amount > amount:
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "bid_form": form,
+            "max_bid": max_bid,
         })
 
     bid = Bid(amount=amount, listing=listing, user=request.user)

@@ -19,5 +19,6 @@
         <li>{{ listing.description }}</li>
         <img src="{{ listing.img_path }}">
         <li>Price: ${{ listing.price }}</li>
+        <li>Current Bid: ${{ max_bid.amount }}</li>
     </ul>
 {% endblock %}
