@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.db.models import Max
@@ -25,6 +26,7 @@ def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all()
     })
+
 
 # Create a new listing 
 def create_listing(request):
@@ -62,6 +64,7 @@ def watchlist(request):
         "watchlist": request.user.watched_listings.all()
     })
 
+
 # Render page for selected listing
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
@@ -87,6 +90,7 @@ def listing(request, id):
         "max_bid": max_bid,
     })
     
+
 # Post valid bids to database
 def bid(request, id):
     listing = Listing.objects.get(pk=id)
@@ -106,17 +110,20 @@ def bid(request, id):
 
     amount = form.cleaned_data["amount"]
 
-    # Save bid to table and redirect to index page if bid > max amount
-    if max_bid.amount > amount:
+    # If bid not greater than max amount, provide error message and render listing page
+    if max_bid.amount >= amount:
+        messages.error(request, "Error. Bid must be greater than current bid.")
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "bid_form": form,
             "max_bid": max_bid,
         })
 
+    # Save bid to table and redirect to index page if bid > max amount
     bid = Bid(amount=amount, listing=listing, user=request.user)
     bid.save()
     return redirect("listing", id=id)
+
 
 def login_view(request):
     if request.method == "POST":

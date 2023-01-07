@@ -19,6 +19,7 @@ class Listing(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="listings")
     category = models.ForeignKey("Category", on_delete=models.CASCADE, related_name="listings")
+    status = models.IntegerField(default=0) # 0 is closed, 1 is open
 
     def __str__(self):
         return f"{self.title}"
