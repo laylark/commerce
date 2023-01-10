@@ -24,7 +24,7 @@ class NewBidForm(forms.Form):
 # Render index page with all listings
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all()
+        "listings": Listing.objects.filter(status=0)
     })
 
 
@@ -46,7 +46,7 @@ def create_listing(request):
             category = form.cleaned_data["category"]
 
             # Save listing to listing table and redirect to index page
-            listing = Listing(title=title, description=description, img_path=image, price=price, category=category, user=request.user)
+            listing = Listing(title=title, description=description, img_path=image, price=price, category=category, user=request.user, status=1)
             listing.save()
             return redirect("index")
 
@@ -124,6 +124,15 @@ def bid(request, id):
     bid.save()
     return redirect("listing", id=id)
 
+# Change status to closed in database
+def close_auction(request, id):
+    # Validate if user is logged in
+    if not request.user.is_authenticated:
+        return redirect("index")
+
+    Listing.objects.filter(pk=id).update(status=1) # UPDATE Listing SET status = 1 WHERE pk = id
+
+    return redirect("index")
 
 def login_view(request):
     if request.method == "POST":
