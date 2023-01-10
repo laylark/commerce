@@ -61,7 +61,7 @@ def watchlist(request):
         return redirect("index")
 
     return render(request, "auctions/watchlist.html", {
-        "watchlist": request.user.watched_listings.all()
+        "watchlist": request.user.watched_listings.filter(status=0)
     })
 
 
@@ -126,11 +126,22 @@ def bid(request, id):
 
 # Change status to closed in database
 def close_auction(request, id):
+    listing = Listing.objects.filter(pk=id)
+    
     # Validate if user is logged in
     if not request.user.is_authenticated:
         return redirect("index")
 
-    Listing.objects.filter(pk=id).update(status=1) # UPDATE Listing SET status = 1 WHERE pk = id
+    # Validate if user created listing
+    if request.user != listing.user:
+        return redirect("index")
+
+    # Close listing status
+    listing.update(status=1) # UPDATE listing SET status = 1 WHERE pk = id
+    
+    # Identify the winner of the auction
+    winner = listing.bids.order_by('-amount').first().user # SELECT user FROM bids WHERE listing = id ORDER BY amount DESC LIMIT 1
+    listing.update(winner=winner) # UPDATE listing SET winner = winner WHERE pk = id
 
     return redirect("index")
 
