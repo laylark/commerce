@@ -2,12 +2,18 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-    <ul>
+    <div class="listings">
         {% for listing in listings %}
-        <a href="{% url 'listing' id=listing.id %}">{{ listing.title }}</a>
-        <li>{{ listing.description }}</li>
-        <img src="{{ listing.img_path }}">
-        <li>Price: ${{ listing.price }}</li>
+        <div class="card">
+            <img src="{{ listing.img_path }}" class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title"><a href="{% url 'listing' id=listing.id %}">{{ listing.title }}</a></h3>
+                <p class="card-text">{{ listing.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Price: ${{ listing.price }}</li>
+            </ul>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

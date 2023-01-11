@@ -50,8 +50,10 @@ def create_listing(request):
             category = form.cleaned_data["category"]
 
             # Save listing to listing table and redirect to index page
-            listing = Listing(title=title, description=description, img_path=image, price=price, category=category, user=request.user, status=1)
+            listing = Listing(title=title, description=description, img_path=image, price=price, category=category, user=request.user)
             listing.save()
+            initial_bid = Bid(amount=0, listing=listing, user=request.user)
+            initial_bid.save()
             return redirect("index")
 
     # Render new listing form page
@@ -133,7 +135,7 @@ def bid(request, id):
 
 # Change status to closed in database
 def close_auction(request, id):
-    listing = Listing.objects.filter(pk=id)
+    listing = Listing.objects.get(pk=id)
     
     # Validate if user is logged in
     if not request.user.is_authenticated:
@@ -144,11 +146,12 @@ def close_auction(request, id):
         return redirect("index")
 
     # Close listing status
-    listing.update(status=1) # UPDATE listing SET status = 1 WHERE pk = id
+    listing.status = 1
     
     # Identify the winner of the auction
     winner = listing.bids.order_by('-amount').first().user # SELECT user FROM bids WHERE listing = id ORDER BY amount DESC LIMIT 1
-    listing.update(winner=winner) # UPDATE listing SET winner = winner WHERE pk = id
+    listing.winner = winner
+    listing.save() # UPDATE listing SET status = 1, winner = winner WHERE pk=id
 
     return redirect("index")
 
