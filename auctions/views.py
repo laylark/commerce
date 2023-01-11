@@ -21,6 +21,10 @@ class NewListingForm(forms.Form):
 class NewBidForm(forms.Form):
     amount = forms.DecimalField(label="Bid", widget=forms.TextInput(attrs={'class' : 'form-control mx-2'}))
 
+# Create class for comment form
+class NewCommentForm(forms.Form):
+    text = forms.CharField(label="Text", widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
 # Render index page with all listings
 def index(request):
     return render(request, "auctions/index.html", {
@@ -68,8 +72,8 @@ def watchlist(request):
 # Render page for selected listing
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
-    max_bid = listing.bids.order_by('-amount').first() # SELECT * FROM bids WHERE listing = id ORDER BY amount desc LIMIT 1
-
+    max_bid = listing.bids.order_by('-amount').first() # SELECT * FROM bids WHERE listing = id ORDER BY amount DESC LIMIT 1
+    comments = listing.comments.order_by('-text') # SELECT * FROM comments WHERE listing = id ORDER BY text DESC
 
     # Validate if entry exists
     if listing == None:
@@ -88,6 +92,8 @@ def listing(request, id):
         "listing": listing,
         "bid_form": NewBidForm(),
         "max_bid": max_bid,
+        "comment_form": NewCommentForm(),
+        "comments": comments,
     })
     
 
@@ -124,6 +130,7 @@ def bid(request, id):
     bid.save()
     return redirect("listing", id=id)
 
+
 # Change status to closed in database
 def close_auction(request, id):
     listing = Listing.objects.filter(pk=id)
@@ -144,6 +151,34 @@ def close_auction(request, id):
     listing.update(winner=winner) # UPDATE listing SET winner = winner WHERE pk = id
 
     return redirect("index")
+
+
+# Post valid comments to database
+def comment(request, id):
+    listing = Listing.objects.get(pk=id)
+
+    # Validate if user is logged in
+    if not request.user.is_authenticated:
+        return redirect("index")
+
+    # Create a new comment form
+    form = NewCommentForm(request.POST)
+
+    # Validate form
+    if not form.is_valid():
+    # If not valid, render listing page along with form data submitted by user
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "comment_form": form,
+        })
+
+    text = form.cleaned_data["text"]
+
+    # Save comment to database and redirect to current listing page
+    comment = Comment(text=text, user=request.user, listing=listing)
+    comment.save()
+    return redirect("listing", id=id)
+
 
 def login_view(request):
     if request.method == "POST":

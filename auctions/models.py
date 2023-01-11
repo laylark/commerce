@@ -34,10 +34,10 @@ class Bid(models.Model):
         return f"{self.amount}, {self.listing}, {self.user}"
 
 class Comment(models.Model):
-    text = models.TextField()
+    text = models.CharField(max_length=1024, blank=True)
     listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="comments")
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return f"{self.text}, {self.listing}, {self.user}, {self.created_at}"

@@ -14,17 +14,17 @@
             {% endif %}
 
         <form action="{% url 'listing' id=listing.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
+            {% csrf_token %}
+            <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
         </form>
             {% if listing.user == user %}
-            <a href="{% url 'close' id=listing.id %}">Close Auction</a>
+                <a href="{% url 'close' id=listing.id %}">Close Auction</a>
             {% endif %}
         <form action="{% url 'bid' id=listing.id %}" method="post" class="row">
             <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
-            {% csrf_token %}
-            {{ bid_form }}
-            <input type="submit" value="Bid" class="btn btn-primary btns">
+                {% csrf_token %}
+                {{ bid_form }}
+                <input type="submit" value="Bid" class="btn btn-primary btns">
             </div>
         </form>
         {% endif %}
@@ -32,5 +32,17 @@
         <img src="{{ listing.img_path }}">
         <li>Price: ${{ listing.price }}</li>
         <li>Current Bid: ${{ max_bid.amount }}</li>
+        {% if user.is_authenticated %}
+        <form action="{% url 'comment' id=listing.id %}" method="post" class="row">
+            <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
+            {% csrf_token %}
+            {{ comment_form }}
+                <input type="submit" value="Comment" class="btn btn-primary btns">
+            </div>
+        </form>
+        {% endif %}
+        {% for comment in comments %}
+            <p>{{ comment.user }}: {{ comment.text }}</p>
+        {% endfor %}
     </ul>
 {% endblock %}
