@@ -12,3 +12,15 @@ img {
     grid-auto-rows: auto;
     grid-gap: 1rem;
 }
+
+@media only screen and (max-width: 775px) {
+    .listings {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .listings {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

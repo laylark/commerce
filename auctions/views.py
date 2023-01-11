@@ -75,7 +75,7 @@ def watchlist(request):
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
     max_bid = listing.bids.order_by('-amount').first() # SELECT * FROM bids WHERE listing = id ORDER BY amount DESC LIMIT 1
-    comments = listing.comments.order_by('-text') # SELECT * FROM comments WHERE listing = id ORDER BY text DESC
+    comments = listing.comments.order_by('-created_at') # SELECT * FROM comments WHERE listing = id ORDER BY created_at DESC
 
     # Validate if entry exists
     if listing == None:
