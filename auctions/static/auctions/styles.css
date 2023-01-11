@@ -6,6 +6,10 @@ img {
     width: 20rem;
 }
 
+.listing {
+    max-width: 30rem;
+}
+
 .listings {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

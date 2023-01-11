@@ -2,7 +2,7 @@
 
 {% block body %}
     <h2>{{ listing.title }}</h2>
-    <ul>
+    <div>
         {% if user.is_authenticated %}
 
             {% if messages %}
@@ -21,10 +21,14 @@
                 <a href="{% url 'close' id=listing.id %}">Close Auction</a>
             {% endif %}
         {% endif %}
-        <li>{{ listing.description }}</li>
-        <img src="{{ listing.img_path }}">
-        <li>Price: ${{ listing.price }}</li>
-        <li>Current Bid: ${{ max_bid.amount }}</li>
+        <div class="card listing">
+            <img src="{{ listing.img_path }}" class="card-img-top">
+            <p class="card-text p-2">{{ listing.description }}</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Price: ${{ listing.price }}</li>
+                <li class="list-group-item">Current Bid: ${{ max_bid.amount }}</li>
+            </ul>
+        </div>
         {% if user.is_authenticated %}
         <form action="{% url 'bid' id=listing.id %}" method="post" class="row">
             <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
@@ -48,5 +52,5 @@
                 <p class="card-body">{{ comment.text }}</p>
             </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
