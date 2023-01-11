@@ -20,6 +20,12 @@
             {% if listing.user == user %}
                 <a href="{% url 'close' id=listing.id %}">Close Auction</a>
             {% endif %}
+        {% endif %}
+        <li>{{ listing.description }}</li>
+        <img src="{{ listing.img_path }}">
+        <li>Price: ${{ listing.price }}</li>
+        <li>Current Bid: ${{ max_bid.amount }}</li>
+        {% if user.is_authenticated %}
         <form action="{% url 'bid' id=listing.id %}" method="post" class="row">
             <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
                 {% csrf_token %}
@@ -27,14 +33,8 @@
                 <input type="submit" value="Bid" class="btn btn-primary btns">
             </div>
         </form>
-        {% endif %}
-        <li>{{ listing.description }}</li>
-        <img src="{{ listing.img_path }}">
-        <li>Price: ${{ listing.price }}</li>
-        <li>Current Bid: ${{ max_bid.amount }}</li>
-        {% if user.is_authenticated %}
         <form action="{% url 'comment' id=listing.id %}" method="post" class="row">
-            <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
+            <div class="input-group wrapper mt-3 mb-3 w-50 align-items-center">
             {% csrf_token %}
             {{ comment_form }}
                 <input type="submit" value="Comment" class="btn btn-primary btns">
@@ -42,7 +42,11 @@
         </form>
         {% endif %}
         {% for comment in comments %}
-            <p>{{ comment.user }}: {{ comment.text }}</p>
+            <div class="card">
+                <h5 class="card-title p-2">{{ comment.user }}</h5>
+                <h6 class="card-subtitle px-2 mb-2 text-muted">{{ comment.created_at }}</h6>
+                <p class="card-body">{{ comment.text }}</p>
+            </div>
         {% endfor %}
     </ul>
 {% endblock %}
