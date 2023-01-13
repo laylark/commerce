@@ -186,7 +186,7 @@ def comment(request, id):
     return redirect("listing", id=id)
 
 
-# TODO: Sort listings by category to send to client
+# Sort listings by selected category
 def category(request, id):
     listings = Listing.objects.filter(category=id, status=0) # SELECT * FROM listings WHERE category = id AND status = 0
     category = Category.objects.get(pk=id)

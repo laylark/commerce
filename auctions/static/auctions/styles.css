@@ -17,6 +17,19 @@ img {
     grid-gap: 1rem;
 }
 
+/* @media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--gray);
+    }
+    #nav {
+        background-color: var(--dark);
+    }
+    .card {
+        background-color: var(--dark);
+        color: white;
+    }
+} */
+
 @media only screen and (max-width: 775px) {
     .listings {
         grid-template-columns: repeat(2, 1fr);
