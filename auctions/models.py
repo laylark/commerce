@@ -9,7 +9,7 @@ class Category(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class Listing(models.Model):
     title = models.CharField(max_length=64)
@@ -23,7 +23,7 @@ class Listing(models.Model):
     status = models.IntegerField(default=0) # 0 is open, 1 is closed
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title}, {self.category.name}"
 
 class Bid(models.Model):
     amount = models.DecimalField(max_digits=7, decimal_places=2)

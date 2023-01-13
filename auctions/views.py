@@ -186,6 +186,17 @@ def comment(request, id):
     return redirect("listing", id=id)
 
 
+# TODO: Sort listings by category to send to client
+def category(request, id):
+    listings = Listing.objects.filter(category=id, status=0) # SELECT * FROM listings WHERE category = id AND status = 0
+    category = Category.objects.get(pk=id)
+
+    return render(request, "auctions/category.html", {
+        "listings": listings,
+        "category": category
+        })
+
+
 def login_view(request):
     if request.method == "POST":
 
