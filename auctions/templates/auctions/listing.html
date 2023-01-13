@@ -3,7 +3,7 @@
 {% block body %}
     <h2>{{ listing.title }}</h2>
     <div>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.status == 0 %}
 
             {% if messages %}
                 {% for message in messages %}
@@ -21,6 +21,11 @@
                 <a href="{% url 'close' id=listing.id %}">Close Auction</a>
             {% endif %}
         {% endif %}
+        {% if user.is_authenticated and listing.status == 1 %}
+            {% if listing.winner.id == user.id %}
+                <div class="alert alert-success" role="alert">You Won!</div>
+            {% endif %}
+        {% endif %}
         <div class="card listing">
             <img src="{{ listing.img_path }}" class="card-img-top">
             <p class="card-text p-2">{{ listing.description }}</p>
@@ -29,7 +34,7 @@
                 <li class="list-group-item">Current Bid: ${{ max_bid.amount }}</li>
             </ul>
         </div>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.status == 0 %}
         <form action="{% url 'bid' id=listing.id %}" method="post" class="row">
             <div class="input-group wrapper mt-3 mb-3 w-25 align-items-center">
                 {% csrf_token %}
