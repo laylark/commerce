@@ -1,4 +1,5 @@
 {% extends "auctions/layout.html" %}
+{% load humanize %}
 
 {% block body %}
     <h2>{{ listing.title }}</h2>
@@ -30,8 +31,8 @@
             <img src="{{ listing.img_path }}" class="card-img-top">
             <p class="card-text p-2">{{ listing.description }}</p>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Price: ${{ listing.price }}</li>
-                <li class="list-group-item">Current Bid: ${{ max_bid.amount }}</li>
+                <li class="list-group-item">Price: ${{ listing.price|intcomma }}</li>
+                <li class="list-group-item">Current Bid: ${{ max_bid.amount|intcomma }}</li>
             </ul>
         </div>
         {% if user.is_authenticated and listing.status == 0 %}
