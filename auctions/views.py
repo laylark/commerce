@@ -103,6 +103,7 @@ def listing(request, id):
 def bid(request, id):
     listing = Listing.objects.get(pk=id)
     max_bid = listing.bids.order_by('-amount').first()
+    comments = listing.comments.order_by('-created_at') # SELECT * FROM comments WHERE listing = id ORDER BY created_at DESC
 
     # Create a new bid form
     form = NewBidForm(request.POST)
@@ -125,6 +126,8 @@ def bid(request, id):
             "listing": listing,
             "bid_form": form,
             "max_bid": max_bid,
+            "comment_form": NewCommentForm(),
+            "comments": comments,
         })
 
     # Save bid to table and redirect to index page if bid > max amount
@@ -151,7 +154,7 @@ def close_auction(request, id):
     # Identify the winner of the auction
     winner = listing.bids.order_by('-amount').first().user # SELECT user FROM bids WHERE listing = id ORDER BY amount DESC LIMIT 1
     listing.winner = winner
-    listing.save() # UPDATE listing SET status = 1, winner = winner WHERE pk=id
+    listing.save()
 
     return redirect("index")
 
