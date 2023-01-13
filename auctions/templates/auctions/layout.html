@@ -35,10 +35,9 @@
                             Categories
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Puppy</a>
-                            <a class="dropdown-item" href="#">Young</a>
-                            <a class="dropdown-item" href="#">Adult</a>
-                            <a class="dropdown-item" href="#">Senior</a>
+                            {% for category in categories %}
+                            <a class="dropdown-item" href="{% url 'category' id=category.id %}">{{ category.name }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </li>
