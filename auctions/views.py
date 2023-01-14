@@ -19,11 +19,11 @@ class NewListingForm(forms.Form):
 
 # Create class for bidding form
 class NewBidForm(forms.Form):
-    amount = forms.DecimalField(label="", widget=forms.TextInput(attrs={'placeholder' : 'Place a bid...', 'class' : 'form-control mx-2'}))
+    amount = forms.DecimalField(label="", widget=forms.TextInput(attrs={'placeholder' : 'Place a bid...', 'class' : 'form-control listing-control'}))
 
 # Create class for comment form
 class NewCommentForm(forms.Form):
-    text = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Add a comment...', 'class' : 'form-control mx-2'}))
+    text = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Add a comment...', 'class' : 'form-control form-comment'}))
 
 # Render index page with all listings
 def index(request):

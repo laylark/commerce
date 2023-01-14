@@ -5,24 +5,28 @@
     <h2>Watchlist</h2>
     <div class="listings">
         {% for listing in watchlist %}
-        <div class="card">
-            <img src="{{ listing.img_path }}" class="card-img-top">
-            <div class="card-body">
-                <h3 class="card-title"><a href="{% url 'listing' id=listing.id %}">{{ listing.title }}</a></h3>
-                <p class="card-text">{{ listing.description }}</p>
+            <div class="card">
+                <a href="{% url 'listing' id=listing.id %}">
+                    <img src="{{ listing.img_path }}" class="card-img-top">
+                </a>
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <a href="{% url 'listing' id=listing.id %}">{{ listing.title }}</a>
+                        </h3>
+                        <p class="card-text">{{ listing.description }}</p>
+                    </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Price: ${{ listing.price|intcomma }}</li>
+                    {% if user.is_authenticated %}
+                    <li class="list-group-item">
+                        <form action="{% url 'listing' id=listing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Price: ${{ listing.price|intcomma }}</li>
-                {% if user.is_authenticated %}
-                <li class="list-group-item">
-                    <form action="{% url 'listing' id=listing.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" name="add-to-watchlist" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"> Watchlist</i></button>
-                    </form>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
         {% endfor %}
     </div>
 {% endblock %}

@@ -1,15 +1,51 @@
+:root {
+    --light-green: #45B88B;
+    --dark-green: #0B4B33;
+    --light-text: #f8f8f8;
+}
+
 body {
-    padding: 10px;
+    color: var(--dark-green);
+    background-color: var(--light-text);
 }
 
 img {
     width: 20rem;
 }
 
+nav {
+    background-color: var(--light-green);
+}
+.navbar {
+    margin-bottom: 2rem;
+}
+.nav-link {
+    color: var(--light-text)
+}
+.header {
+    background-color: var(--dark-green);
+    padding: 1em;
+    color: var(--light-text)
+}
+.user {
+    color: var(--light-green);
+}
+a {
+    color: var(--dark-green);
+}
+a:hover {
+    color: var(--dark-green);
+}
+.btn-link {
+    color: var(--light-text)
+}
+.btn-link:hover {
+    color: var(--dark-green);
+}
+
 .listing {
     max-width: 30rem;
 }
-
 .listings {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -17,18 +53,59 @@ img {
     grid-gap: 1rem;
 }
 
-/* @media (prefers-color-scheme: dark) {
+.comment-card {
+    margin: 2rem;
+}
+textarea.form-comment {
+    height: 5rem;
+    margin-bottom: 2rem;
+}
+.comment-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8em;
+    font-size: 14px;
+}
+
+.listing-control {
+    width: auto;
+    margin: 2rem 1rem 2rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
     body {
-        background-color: var(--gray);
+        background-color: #181D27;
+        color: var(--light-text);
     }
-    #nav {
-        background-color: var(--dark);
+    nav {
+        background-color:#187F58;
     }
     .card {
-        background-color: var(--dark);
-        color: white;
+        background-color: #0F1117;
+        color: var(--light-text);
     }
-} */
+    .list-group-item {
+        background-color: #0F1117;
+    }
+    a {
+        color: var(--light-text);
+    }
+    a:hover {
+        color: var(--light-green);
+    }
+    .btn-link {
+        color: var(--light-text);
+    }
+    .btn-link:hover {
+        color: var(--light-green);
+    }
+}
 
 @media only screen and (max-width: 775px) {
     .listings {
