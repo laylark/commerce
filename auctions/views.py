@@ -72,11 +72,11 @@ def watchlist(request):
 
 # Render page for selected listing
 def listing(request, id):
-    listing = Listing.objects.get(pk=id)
-    
+    try:
+        listing = Listing.objects.get(pk=id)
+    except Listing.DoesNotExist:
     # Validate if entry exists
-    if listing == None:
-        return render(request, "auctions/404.html", status=404)
+            return render(request, "auctions/404.html", status=404)
 
     if request.method == "POST":
 
