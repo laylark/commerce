@@ -188,8 +188,11 @@ def comment(request, id):
 
 # Sort listings by selected category
 def category(request, id):
-    listings = Listing.objects.filter(category=id, status=0) # SELECT * FROM listings WHERE category = id AND status = 0
-    category = Category.objects.get(pk=id)
+    try:
+        listings = Listing.objects.filter(category=id, status=0) # SELECT * FROM listings WHERE category = id AND status = 0
+        category = Category.objects.get(pk=id)
+    except Category.DoesNotExist:
+        return render(request, "auctions/404.html", status=404)
 
     return render(request, "auctions/category.html", {
         "listings": listings,
